@@ -1,0 +1,14 @@
+Package: CISpackage
+Type: Package
+Title: Colocalize Immune-Cell Score
+Version: 0.1.0
+Author: Tarrin Dewberry
+Maintainer: Tarrin Dewberry <tdewberr@umich.edu>
+Description: A tool to score and rank immune-specific cells in a given disease 
+            using a GWAS- eQTL Colocalization pipeline.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Imports: 
+    coloc
