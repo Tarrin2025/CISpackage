@@ -30,7 +30,7 @@ usethis::use_testthat("only returns overlap SNPs",
                       {results <- overlap_snps(gwas_df, eqtl_df)
                       expect_equal(results$rsid,expect_overlap_df$rsid)})
 
-test_that("removes duplicate rsids in gwas before merging", {
+usethis::use_testthat("removes duplicate rsids in gwas before merging", {
   gwas_dupes <- data.frame(
     rsid = c("rs1", "rs1", "rs2"),
     beta_gwas = c(0.5,0.1,0.2),
@@ -40,24 +40,25 @@ test_that("removes duplicate rsids in gwas before merging", {
   expect_equal(result$rsid, "rs2")
 })
 
-test_that("removes duplicate rsids in eQTL before merging", {
+usethis::use_testthat("removes duplicate rsids in eQTL before merging", {
   eqtl_dupes <- data.frame(
     rsid = c("rs2", "rs2", "rs5"),
-    gene = c("GENE1", "GENE1_DUP", "GENE2"),
-    stringsAsFactors = FALSE
+    beta_eQTL = c(0.2,0.3,0.6),
+    se_eQTL = c(0.02,0.03,0.04),
+    location = c(100,300,400)
   )
   result <- overlap_snps(gwas_dupes, eqtl_dupes)
   expect_equal(nrow(result), 2)
 })
 
-test_that("returns empty data frame when there is no overlap", {
-  gwas_no_overlap <- data.frame(
-    rsid = c("rs10", "rs11"),
-    pval = c(0.01, 0.05),
-    stringsAsFactors = FALSE
-  )
-  result <- overlap_snps(gwas_no_overlap, eqtl_df)
-  expect_equal(nrow(result), 0)
+usethis::use_testthat("does not overlap when dataframes are empty", {
+  gwas_empty <- data.frame()
+  res_empgwas <- overlap_snps(gwas_empty, eqtl_df)
+  expect_equal(nrow(res_empgwas), 0)
+
+  eqtl_empty <- data.frame()
+  res_empeQTL <- overlap_snps(gwas_df,empty)
+  expect_equal(nrow(res_empeQTL), 0)
 })
 
 
