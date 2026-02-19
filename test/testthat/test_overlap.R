@@ -48,17 +48,27 @@ usethis::use_testthat("removes duplicate rsids in eQTL before merging", {
     location = c(100,300,400)
   )
   result <- overlap_snps(gwas_dupes, eqtl_dupes)
-  expect_equal(nrow(result), 2)
+  expect_equal(result$rsid, "rs2")
 })
 
 usethis::use_testthat("does not overlap when dataframes are empty", {
-  gwas_empty <- data.frame()
-  res_empgwas <- overlap_snps(gwas_empty, eqtl_df)
-  expect_equal(nrow(res_empgwas), 0)
+  gwas_empty <- data.frame(
+    rsid = character(),
+    beta = numeric(),
+    pval = numeric(),
+    standard_error = numeric(),
+    location = numeric()
+  )
+  expect_error( overlap_snps(gwas_empty, eqtl_df),"Files are empty")
 
-  eqtl_empty <- data.frame()
-  res_empeQTL <- overlap_snps(gwas_df,empty)
-  expect_equal(nrow(res_empeQTL), 0)
+  eqtl_empty <- data.frame(
+    rsid = character(),
+    beta = numeric(),
+    pval = numeric(),
+    standard_error = numeric(),
+    location = numeric()
+  )
+  expect_errorl(overlap_snps(gwas_df,empty),"Files are empty")
 })
 
 
