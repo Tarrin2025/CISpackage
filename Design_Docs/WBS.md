@@ -6,7 +6,7 @@
 
 Goal: Create github repository and design documentation. 
 
-* Task 1.1:  Github Repository Setup  
+[] Task 1.1:  Github Repository Setup  
   * Description : Initialize Github repository with .gitignore, README, and license.  
     * Output: Functional Github repository   
   * Task 1.2:  Create Design Documents :S  
