@@ -6,10 +6,10 @@
 
 Goal: Create github repository and design documentation. 
 
-[] Task 1.1:  Github Repository Setup  
+[x] Task 1.1:  Github Repository Setup  
   * Description : Initialize Github repository with .gitignore, README, and license.  
     * Output: Functional Github repository   
-  * Task 1.2:  Create Design Documents :S  
+ [x] Task 1.2:  Create Design Documents :S  
     * Description: Create a software Requirement Specification (SRS), Work Breakdown Structure (WBS), and Design Document Specification (DDS) documents  
     * Output: Design documents are created and included in the github repository
 
@@ -17,16 +17,16 @@ Goal: Create github repository and design documentation.
 
 Goal: Download genome-wide association studies (GWAS) and expression quantitative trait loci (eQTL) summary statistic files from public databases. Load downloaded files into the package. 
 
-* Task 2.1: Download GWAS Dataset from [EBI Catalog](https://www.ebi.ac.uk/gwas/docs/methods/summary-statistics)  
+[x] Task 2.1: Download GWAS Dataset from [EBI Catalog](https://www.ebi.ac.uk/gwas/docs/methods/summary-statistics)  
   * Description: Download the GWAS summary statistics for Amyotrophic lateral sclerosis (ALS) from the [EBI Catalog](https://www.ebi.ac.uk/gwas/docs/methods/summary-statistics). Ensure that the GWAS file is a harmonized summary statistic that has the following columns: snp ids, beta, varbeta (or standard error), pvalues, location.  
     * Output: GWAS summary statistics file  
-  * Task 2.2:  Download eQTL Dataset from the [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/Data_access/)   
+[x] Task 2.2:  Download eQTL Dataset from the [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/Data_access/)   
     * Description: Download the eQTL summary statistics for desired immune cell type from the  [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/Data_access/). Ensure that the eQTL file is a harmonized summary statistic that has the following columns: snp ids, beta, varbeta (or standard error), pvalues, location.  
     * Output: One or more immune specific cell type eQTL files  
-  * Task 2.3 Subsetting Data for Tool Development  
+ [x] Task 2.3 Subsetting Data for Tool Development  
     * Description: Subset the GWAS and eQTL files to a smaller sample size for the tools development.   
     * Output: Reduced GWAS and eQTL datasets that meet the requirements for the tool.   
-  * Task 2.4: Create a *check\_data()* function  
+  [x] Task 2.4: Create a *check\_data()* function  
     * Description: Create a function that validates the GWAS and eQTL files. It will check for empty files, non-dataframe inputs, and missing required columns. Include unit tests for the function.  
     * Output: Validated GWAS and eQTL dataframes inputs
 
@@ -34,29 +34,28 @@ Goal: Download genome-wide association studies (GWAS) and expression quantitativ
 
 Goal: Implement and validate colocalization pipeline.
 
-* Task 3.1: Create an *overlap\_snps()* function  
+[x] Task 3.1: Create an *overlap\_snps()* function  
   * Description: Use the R function *merge()* to overlap the GWAS and eQTL datasets by snp\_id.   
     * Create a unit test for validation to ensure that the snps returned are shared between the GWAS and eQTL file. Also check that the function can handle snp duplicates.  
     * Output: One dataframe containing shared snps between GWAS and eQTL as well as all the GWAS and eQTL content from both dataframes.   
-  * Task 3.2: Create a *create\_coloc\_input() function*  
+[x] Task 3.2: Create a *create\_coloc\_input() function*  
     * Description: Convert a dataframe that is the overlap of the shared snps from both the GWAS and eQTL file into separate input lists for *coloc.abf()* function. The input list should have arguments including beta, varbeta, SNP\_ID, position.   
     * Output: Input list for GWAS and each immune cell type  
-  * Task 3.3: Validate *create\_coloc\_input()* function  
+[x] Task 3.3: Validate *create\_coloc\_input()* function  
     * Description: Run *checkdataset()* from the coloc R package to ensure the list meets the requirements for the *coloc.abf()* function. Ensure that the values for beta , varbeta (or standard error), location are all numeric. Ensure that snp ids are characters.   
     * Output: Unitest and validated input list for GWAS and each immune cell type   
-  * Task 3.4:Create a *run\_coloc\_pipeline()* function  
+[x] Task 3.4:Create a *run\_coloc\_pipeline()* function  
     * Description: Run *coloc.abf()* for each GWAS locus against each immune-specific eQTL list to estimate posterior probabilities of shared causal variants. Combine the colocalization outputs from the function into a table containing the GWAS locus, immune cell type and PP4 values.   
     * Output: CSV file with Gwas loci, immune cell type and PP4 values. 
 
-  * Task 3.5: Validate run\_coloc\_pipeline()  
+ [x] Task 3.5: Validate run\_coloc\_pipeline()  
     * Description: Create unit test for run\_coloc\_pipeline()  
     * Output: Unitest and validated colocalization pipeline. 
 
 ## Activity 4: Immune Cell type Scoring & Aggregation
 
 Goal: Generate CIS scores and rank immune cell types.  
-
-* Task 4.1: Create *norm\_coloc ()* function  
+[ ] Task 4.1: Create *norm\_coloc ()* function  
   * Description: Normalize PP4 values across immune cell types for each GWAS locus (makes sure the weights sum to 1).  
     * Output: Table of normalized weights for each locus-immune cell pair  
   * Task 4.2: Validate *norm\_coloc()* function  
