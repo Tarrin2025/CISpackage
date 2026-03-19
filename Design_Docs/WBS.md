@@ -6,7 +6,7 @@
 
 Goal: Create github repository and design documentation. 
 
-[x] Task 1.1:  Github Repository Setup  
+:ballot_box_with_check: Task 1.1:  Github Repository Setup  
   * Description : Initialize Github repository with .gitignore, README, and license.  
     * Output: Functional Github repository   
  [x] Task 1.2:  Create Design Documents :S  
