@@ -1,0 +1,73 @@
+---
+title: "CIS_Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CIS_Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+Load Package: 
+```{r}
+library(dplyr)
+source("R/filter_snps.R")
+source("R/overlap_snps.R")
+source("R/coloc_pipeline.R")
+```
+
+#Run Pipeline for a Single Cell Type
+Load Gwas file:
+```{r}
+gwas <- read.table("/Users/tarrindewberry/Downloads/Gwas_raw_sumstats.tsv.gz", header = TRUE)
+head(gwas)
+```
+Load eqtl file for a specific immune cell type:
+In this example we will use a bcell_eqtl
+```{r}
+bcell_eqtl <- read.table("/Users/tarrindewberry/Downloads/bcell.cc.tsv.gz", header = TRUE)
+head(bcell_eqtl)
+```
+#Filter the full genome raw statistics files searching for the given SNP that you are looking for. 
+```{r}
+gwas_filter_snps <- filter_nearby_snps_gwas(df_gwas =gwas,snp_id = "rs2453555", region_window = 50000)
+bcell_filter_snps <- filter_nearby_snps_eqtl(df_eqtl = bcell_eqtl,snp_id = "rs2453555",region_window = 50000)
+```
+#Overlap the dataframes to ensure that the same snps are in both the eQTL and Gwas files.
+```{r}
+overlap_gwas_bcell <- overlap_snps(gwas_filter_snps,bcell_filter_snps)
+```
+#This what the overlap dataframe looks like
+```{r}
+head(overlap_gwas_bcell)
+```
+#We have to use this overlap dataframe to run the colocalization pipeline by creating, create two input list for the coloc functions
+#Now we can run the coloc pipeline:
+```{r}
+run_coloc_pipeline(overlap_gwas_bcell, "bcell")
+```
+#The coloc function produces a colocalization percentage of 35%, showing that 
+
+#Run Pipeline for Multiple Immune Cell Type: 
+#For Bcell, Cd4 naive, and Cd8 naive 
+```{r}
+gwas <- read.table("/Users/tarrindewberry/Downloads/Gwas_raw_sumstats.tsv.gz", header = TRUE)
+head(gwas)
+```
+#Create Load all Cell types
+```{r}
+cell_type_list <- list(
+  "bcell" = "/Users/tarrindewberry/Downloads/bcell.cc.tsv.gz",
+  "cd4_naive" = "/Users/tarrindewberry/Downloads/cd4_naiv.cc.tsv.gz",
+  "cd8_naive" = "/Users/tarrindewberry/Downloads/cd8_naiv.cc.tsv.gz"
+)
+
+for(cell in names(cell_type_list)){
+  cell_eqtl <- read.table(cell_type_list[["cell"]], header = TRUE)
+  filter_nearby_snps_eqtl(cell_eqtl)
+  #save as an object (load it)
+}
+
+```
+
+```{r setup}
+library(CISpackage)
+```

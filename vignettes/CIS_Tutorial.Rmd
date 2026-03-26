@@ -1,0 +1,93 @@
+---
+title: "CIS_Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CIS_Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+Load Packages & Import necessary files: 
+```{r}
+library(dplyr)
+source("R/filter_snps.R")
+source("R/overlap_snps.R")
+source("R/coloc_pipeline.R")
+```
+
+#Part 1: Run Pipeline for a Single Cell Type
+Instead of Using full size datasets, we are using saved objects that uses the filter_nearby_snps function to subset the dataset. This is gwas file is for snp-trait associations for ALS (refer to the datatset file in the Design Documents folder).
+```{r}
+gwas_nearby_snps <- readRDS("Data/gwas_nearby_snps.rds")
+head(gwas_nearby_snps)
+```
+#Load eqtl file for a specific immune cell type:
+In this example we will use a bcell_eqtl. Similar to the gwas_file, we will be using a saved object of the bcell dataset after using the filter_nearby_snps. 
+```{r}
+bcell_nearby_snps <- readRDS("Data/bcell_filter_snps.rds")
+head(bcell_nearby_snps)
+```
+
+#Overlap the dataframes to ensure that the same snps are in both the eQTL and gwas files before the running the colocalization pipeline.
+```{r}
+overlap_gwas_bcell <- overlap_snps(gwas_nearby_snps,bcell_nearby_snps)
+```
+#This what the overlap dataframe looks like
+```{r}
+head(overlap_gwas_bcell)
+```
+#We have to use this overlap dataframe to run the colocalization pipeline, which converts the overlap dataframe  into two input list (gwas_list & eqtl_list) for the coloc.abf() function from the Coloc R package. 
+
+```{r}
+#Now we can run the coloc pipeline:
+run_coloc_pipeline(overlap_gwas_bcell, "bcell")
+```
+#PP.0 : No assoication between Gwas signal and eQTL signal
+#PP.1 : Association with only the Gwas signal
+#PP.2 : Assoication with only the eQTL signal
+#PP.3 : Assoication with Gwas and eQTL signal, but independent Snps variants
+#PP.4 : Association with Gwas and eQTL signal but shared Snps variants
+The coloc function produces a colocalization percentage of pp4 value of 35%, showing that the probability of associated snps between GWAS and Bcell are shared casual snps.Unfortunately this is a really low probability so we can conclude that the gene regulation in a bcell immune cell type is not likely relevant to ALS.  
+
+#Part 2: Run Pipeline for Multiple Immune Cell Type: 
+
+```{r}
+#Load Gwas object produced by filter_nearby_snp_gwas() function
+gwas_nearby_snps <- readRDS("Data/gwas_nearby_snps.rds")
+head(gwas_nearby_snps)
+```
+#Create Load all Cell types ():
+In real data, you will use filter_nearby_snps_eqtl_all() for all the eqtl for the cell types we want to use in this package.For the vingerret to run simply, we will use saved data objects to implement the pipeline of this package. 
+```{r}
+#For Bcell, Cd4 naive, and Cd8 naive
+bcell_nearby_snps <- readRDS("Data/bcell_filter_snps.rds")
+cd4_nearby_snps <- readRDS("Data/cd4_naive_nearby_snps.rds")
+cd8_nearby_snps <- readRDS("Data/cd8_naive_nearby_snps.rds")
+cell_type_list <- list("bcell" = bcell_nearby_snps,
+                  "cd4" = cd4_nearby_snps,
+                  "cd8" = cd8_nearby_snps)
+```
+#Run overlap_function overlapping gwas to every immune cell type eQTL file
+```{r}
+overlap_list <- overlap_snps_all(gwas_nearby_snps, cell_type_list)
+```
+#Run coloc_pipeline on the overlap dataframes for each cell type
+```{r}
+results_list <-run_coloc_pipeline_all(overlap_list)
+
+```
+```{r}
+#Produced results dataframe collecting the cell type and pp4 value
+results_list
+```
+
+Rank the immune cell types by their colocalization(pp4) score:
+```{r}
+
+rank_cell(results)
+```
+A high pp4 ( posterior probability of hypothesis 4) value supports the hypothesis that SNP associated with the ALS risk in GWAS is likely the same SNP regulating gene expression in the cd8 immune cell type, suggesting that the cd8 cell type likely supports gene regulation that is relevant for ALS compared to other cell types.
+
+
+```{r setup}
+library(CISpackage)
+```
