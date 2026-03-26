@@ -4,3 +4,6 @@
 Input data: GWAS and eQTL files must include fields such as SNP ID, varbeta, beta, and type,p-values, position(optional). If both varbeta and beta can’t be provided, then p-values and MAF must be provided and are sufficient factors as well. 
 Output Data: One data file with locus, immune cell type, PP4 value, CIS score, and ranked top immune cell types
 
+Refer to the dataset file in the Design documents folder to see the example data.
+
+Refer to vignette folder for the demo/ tutorial od how to use this package and interpret the results. 
