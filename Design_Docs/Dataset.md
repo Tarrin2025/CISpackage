@@ -16,7 +16,11 @@
 
 2. ## **EBI eQTL Catalog**
 
-   In the development of this tool, I will use data from the EBI GWAS catalog and the EBI eQTL catalog. The sample data used to develop this tool is a subset of immune cell files from the eQTL Catalogue. I specifically use data from the Schmiedel\_2018 paper ( in the eQTL Catalogue the study\_id is QTS000026). Schmiedel\_2018 paper is composed of 15 different immune cell types from the DICE ( Database of Immune Cell Expression, Expression quantitative trait loci (eQTLs) and Epigenomics). I specifically used 3 immune cell types to develop this package: 
+   In the development of this tool, I will use data from the EBI GWAS catalog and the EBI eQTL catalog. The sample data used to develop this tool is a subset of immune cell files from the eQTL Catalogue. I specifically use data from the Schmiedel\_2018 paper ( in the eQTL Catalogue the study\_id is QTS000026). Schmiedel\_2018 paper is composed of 15 different immune cell types from the DICE ( Database of Immune Cell Expression, Expression quantitative trait loci (eQTLs) and Epigenomics). I specifically used files that had a quantification method of “ge,” meaning that it was developed using total gene-level expression.
+
+   
+
+   I specifically used 3 immune cell types to develop this package: 
 
 * Bcell (QTD000474)  
 * Cd4\_naive T cell(QTD000479)  
@@ -27,20 +31,26 @@
 
 2. # Data Format, Structure, and Size 
 
-The files are tsv (tab-separated values) with: 
+## 	**Example dataset for using the tool:** 
+
+Since both the Gwas and each immune cell type file had over 10 million SNPs, I created smaller files by subsetting the first 1000 SNPs from the original file. Each file is about 156 kb compared to its original size of around 300-400 MB. The subsetted datasets will make it more efficient to test if the modules in this package run efficiently. The data can be seen in the data folder in the github repository. The Gwas file is a summary of statistics of variants associated with ALS, which is sufficient for this project because recent studies have shown immune-specific changes in the disease. Instead of the 15 cell types that will be available in the full package, I only tested on three immune cell types. I used composed of a subsetted Gwas file and 3 Immune specific cell types: 
+
+* Bcell (QTD000474)  
+* Cd4\_naive T cell(QTD000479)  
+* C48\_naive T cell(QTD000489)
+
+
+  
+The Gwas and eQTL files are tsv (tab-separated values) with: 
 
 * Each row are the different SNPs  
 * Each column is meta data about the SNPS (Ex. standard error, base pair location, etc.) 
 
-**Please Note: Beta, Varbeta, Standard Error, Pvalue, snps\_IDs are necessary for colocalization\!**  
+**The files are great for tool requirements because they are harmonized, having required columns like Beta, Varbeta, Standard Error, Pvalue, snps\_IDs which are need to run the coloc.abf() function in R.**   
 Example of Gwas & eQTL file (Column names may vary) :   
 ![][image1]
 
-3. # Subsetting Datasets for Tool Development 
-
-   I specifically used files that had a quantification method of “ge,” meaning that it was developed using total gene-level expression. Each file had over 10 million SNPs, so I created much smaller files where only the first 1000 SNPs were used. The data can be seen in the data folder in the github repository. 
-
-4. # Computing Cost & Resources 
+3. # Computing Cost & Resources 
 
    The files are very large so high-performance clustering was used to run the full summary statistics files.   
    
