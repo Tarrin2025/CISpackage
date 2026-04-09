@@ -49,3 +49,13 @@ filter_nearby_snps_gwas <- function(df_gwas,snp_id,region_window = 50000){
   message(paste("The number of nearby snps is",nrow(df_nearby_snps_gwas)))
   return(df_nearby_snps_gwas)
 }
+filterall_nearby_snps_eqtl <- function(cell_type_list, snp_id, region_window){
+  filter_list <- list()
+  for (cell in names(cell_type_list)) {
+    cell_eqtl <- read.table(cell_type_list[["cell"]], header = TRUE)
+    filter_df <- filter_nearby_snps_eqtl(cell_eqtl, snp_id, region_window )
+    filter_list[[cell]] <-filter_df
+
+  }
+  return(filter_list)
+}

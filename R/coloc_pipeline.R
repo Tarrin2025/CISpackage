@@ -79,7 +79,8 @@ run_coloc_pipeline<- function(overlap_df, cell){
   result_df <- data.frame(
     cell_type = cell,
     pp4 = as.numeric(res$summary["PP.H4.abf"]),
-    stringsAsFactors = FALSE
+    pp3 = as.numeric(res$summary["PP.H3.abf"]),
+   stringsAsFactors = FALSE
   )
   return(result_df)
 }

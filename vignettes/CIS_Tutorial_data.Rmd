@@ -1,0 +1,101 @@
+---
+title: "CIS_Realdata_Tutorial"
+author: "Tarrin Dewberry"
+date: "2026-04-08"
+output: pdf_document
+---
+The CIS package is a R-based pipeline for a Gwas-eQTL colocalization pipeline integrating immune cell-specific datasets. This tool is useful for identifying potential immune cell types that genetic variants are likely to regulate for immune-related diseases.  
+
+#Download and Install CIS Package: 
+Download the package:
+
+Clone the repository from GitHub website: https://github.com/Tarrin2025/CISpackage
+Using:
+```{bash}
+git clone <https://github.com/Tarrin2025/CISpackage.git>
+```
+
+Afterwards, navigate into the directory:
+
+```{bash}
+cd <CISpackage>
+```
+Once this is installed successful you can load and use the package in R. 
+Load Package: 
+```{r setup}
+library(CISpackage)
+#source("R/filter_snps.R")
+#source("R/overlap_snps.R")
+#source("R/coloc_pipeline.R")
+```
+1. Understanding the Data:
+#GWAS
+In this tutorial, we will use gwas SNP variants from the ALS disease from the “Common and rare variant association analyses of amyotrophic lateral sclerosis identify 15 risk loci with distinct genetic architectures and neuron-specific biology.”
+The Gwas file is a tsv (tab-separated values) with: 
+- Each row are the different SNPs variants (Total:10461755 variants)
+- Each column is meta data about the SNPS (Ex. standard error, base pair location, etc.)
+```{r}
+gwas <- read.table("/Users/tarrindewberry/Downloads/Gwas_raw_sumstats.tsv.gz", header = TRUE)
+head(gwas)
+```
+We will use data from the EBI GWAS catalog and the EBI eQTL catalog. The sample data used to develop this tool is a subset of immune cell files from the eQTL Catalogue, from the Schmiedel_2018 paper ( in the eQTL Catalogue the study_id is QTS000026). Schmiedel_2018 paper is composed of 15 different immune cell types from the DICE ( Database of Immune Cell Expression, Expression quantitative trait loci (eQTLs) and Epigenomics). 
+We will use: 
+Bcell (QTD000474)
+Cd4_naive T cell(QTD000479)
+C48_naive T cell(QTD000489)
+
+```{r}
+bcell_eqtl <- read.table("/Users/tarrindewberry/Downloads/bcell.cc.tsv.gz", header = TRUE)
+head(bcell_eqtl)
+```
+#We would have a full eQTL file like this (with a list of pathways for each eQTL)
+
+
+2. Since the files contains SNPs across all 22 chromosomes. We must choose a leading SNP and a region of SNPs to include in this region. I will choose the leading snps "rs2453555" and 500kb window region of nearby Snps to include in thr analysis. 
+```{r}
+gwas_filter_snps <- filter_nearby_snps_gwas(df_gwas =gwas,snp_id = "rs2453555", region_window = 50000)
+```
+```{r}
+cell_type_list <- list(
+  "bcell" = "/Users/tarrindewberry/Downloads/bcell.cc.tsv.gz",
+  "cd4_naive" = "/Users/tarrindewberry/Downloads/cd4_naiv.cc.tsv.gz",
+  "cd8_naive" = "/Users/tarrindewberry/Downloads/cd8_naiv.cc.tsv.gz"
+)
+filter_list <- filterall_nearby_snps_eqtl(cell_type_list, "rs2453555", 50000)
+```
+```{r}
+#Run overlap_function overlapping gwas to every immune cell type eQTL file
+
+overlap_list <- overlap_snps_all(gwas_nearby_snps, filter_list)
+```
+#We have to use this overlap dataframe to run the colocalization pipeline, which converts the overlap dataframe  into two input list (gwas_list & eqtl_list) for the coloc.abf() function from the Coloc R package. 
+
+```{r}
+#Now we can run the coloc pipeline:
+results_list <-run_coloc_pipeline_all(overlap_list)
+```
+#PP.0 : No assoication between Gwas signal and eQTL signal
+#PP.1 : Association with only the Gwas signal
+#PP.2 : Assoication with only the eQTL signal
+#PP.3 : Assoication with Gwas and eQTL signal, but independent Snps variants
+#PP.4 : Association with Gwas and eQTL signal but shared Snps variants
+```{r}
+#This is what the Overall Dataframe look likes before the ranking
+results_list
+
+```
+
+
+```{r}
+rank_list <- rank_cell(results_list)
+rank_list
+```
+#As we can see here based on the pp4 value, cd8_native is the most relevant immune cell type for ALS compared to the other two cell types. We also see that it's a strong likelihood. 
+```{r}
+compute_immune_score(rank_list)
+```
+
+
+With the compute_immune_score column we can see that a high CIS score means that the Gwas signal is cell type specific to Cd8 cell compared to other cells. 
+
+Thus we have our answer to our question: The cd8 naive cell is the most relevant immune cell.
