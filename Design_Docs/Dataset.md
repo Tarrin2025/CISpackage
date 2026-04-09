@@ -1,8 +1,9 @@
 
 
-1. # Using Public Datasets
-
-   I will be using published datasets from the following databases:   
+## 	** Real Dataset for answering a biological question using the tool.” ** 
+The real data set will help me identifying potential immune cell types that genetic variants are likely to regulate for immune-related diseases.  
+ 
+ I will be using published datasets from the following databases:   
      
 1. **EBI GWAS Catalog**
 
@@ -19,14 +20,23 @@
    In the development of this tool, I will use data from the EBI GWAS catalog and the EBI eQTL catalog. The sample data used to develop this tool is a subset of immune cell files from the eQTL Catalogue. I specifically use data from the Schmiedel\_2018 paper ( in the eQTL Catalogue the study\_id is QTS000026). Schmiedel\_2018 paper is composed of 15 different immune cell types from the DICE ( Database of Immune Cell Expression, Expression quantitative trait loci (eQTLs) and Epigenomics). I specifically used files that had a quantification method of “ge,” meaning that it was developed using total gene-level expression.
 
    
-
-   I specifically used 3 immune cell types to develop this package: 
-
-* Bcell (QTD000474)  
-* Cd4\_naive T cell(QTD000479)  
-* C48\_naive T cell(QTD000489)
-
-
+In extension of the example dataset(below), the real dataset has 15 immune-specific cell eQTL which are: 
+ - B cell (#QTD000474)
+ - Tfh_mem (#QTD000439)
+ - Th17_mem (#QTD000444)
+ - Th1_mem	(#QTD000449)
+ - Th2_mem (#QTD000454)
+ - Th1-17_mem (#QTD000459)
+ - Treg_mem (#QTD000464)
+ - Treg_naive (#QTD000469)
+ - Cd4_naive (#QTD000479)
+ - Cd4_anti (#QTD000484)
+ - Cd8_naive (#QTD000489)
+ - Cd8_anti (#QTD000494)
+ - Monocyte_CD16_naive (#QTD000499)
+ - Monocyte_naive (#QTD000504)
+ - Nk_naive (#QTD000509)
+Each of these files have over 13 million snps! The files have snps (as the rows) and columns (as the metadata). Refer to the Data Format, structure, and size section for what the structure look like.
   # 
 
 2. # Data Format, Structure, and Size 
@@ -49,6 +59,7 @@ The Gwas and eQTL files are tsv (tab-separated values) with:
 **The files are great for tool requirements because they are harmonized, having required columns like Beta, Varbeta, Standard Error, Pvalue, snps\_IDs which are need to run the coloc.abf() function in R.**   
 Example of Gwas & eQTL file (Column names may vary) :   
 ![][image1]
+
 
 3. # Computing Cost & Resources 
 
